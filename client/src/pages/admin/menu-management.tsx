@@ -393,10 +393,17 @@ else if (restaurant?.mongoUri && menuItems && menuItems.length > 0) {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (!file.type.startsWith('image/')) {
+      const validImageTypes = ['image/'];
+      const validRawFormats = ['.arw', '.cr2', '.nef', '.raf', '.rw2', '.dng', '.raw'];
+      const fileName = file.name.toLowerCase();
+      
+      const isValidImage = file.type.startsWith('image/');
+      const isValidRawFormat = validRawFormats.some(ext => fileName.endsWith(ext));
+      
+      if (!isValidImage && !isValidRawFormat) {
         toast({
           title: "Error", 
-          description: "Please select a valid image file",
+          description: "Please select a valid image file (JPG, PNG, GIF, WebP, or RAW formats like ARW, CR2, NEF, etc.)",
           variant: "destructive",
         });
         return;
