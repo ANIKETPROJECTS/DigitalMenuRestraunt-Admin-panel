@@ -32,18 +32,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'application/vnd.ms-excel'
       ];
       
-      // Allow both Excel files and images
+      // Allow both Excel files and images (including raw formats)
       const isExcelFile = allowedTypes.includes(file.mimetype) || file.originalname.endsWith('.xlsx') || file.originalname.endsWith('.xls');
       const isImageFile = file.mimetype.startsWith('image/');
+      const rawFormats = ['.arw', '.cr2', '.nef', '.raf', '.rw2', '.dng', '.raw'];
+      const isRawFormat = rawFormats.some(ext => file.originalname.toLowerCase().endsWith(ext));
       
-      if (isExcelFile || isImageFile) {
+      if (isExcelFile || isImageFile || isRawFormat) {
         cb(null, true);
       } else {
         cb(new Error('Only Excel files and images are allowed'));
       }
-    },
-    limits: {
-      fileSize: 1 * 1024 * 1024 // 1MB limit
     }
   });
 
