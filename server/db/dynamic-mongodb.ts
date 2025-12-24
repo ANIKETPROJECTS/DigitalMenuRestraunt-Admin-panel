@@ -152,6 +152,27 @@ export function closeRestaurantConnection(mongoUri: string) {
   }
 }
 
+// Define Image schema for restaurant-specific database
+export function getImageModel(connection: mongoose.Connection) {
+  const imageSchema = new mongoose.Schema({
+    data: {
+      type: String, // Base64 encoded image data
+      required: true
+    },
+    mimeType: {
+      type: String,
+      default: 'image/jpeg'
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      expires: 86400 * 30 // Auto-delete after 30 days if not referenced
+    }
+  });
+
+  return connection.model('Image', imageSchema, 'images');
+}
+
 // Define flexible menu item schema for dynamic connections
 export function getMenuItemModel(connection: mongoose.Connection) {
   const menuItemSchema = new mongoose.Schema({
