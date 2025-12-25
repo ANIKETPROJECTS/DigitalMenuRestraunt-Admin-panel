@@ -193,13 +193,8 @@ else if (restaurant?.mongoUri && menuItems && menuItems.length > 0) {
         description: `Menu item ${editingItem ? "updated" : "created"} successfully`,
       });
       queryClient.invalidateQueries({ queryKey: [`/api/admin/restaurants/${restaurantId}/menu-items`] });
-      setIsDialogOpen(false);
+      handleDialogClose(false);
       resetForm();
-      if (editingItem) {
-        setTimeout(() => {
-          window.scrollTo({ top: scrollPosition, behavior: 'auto' });
-        }, 100);
-      }
     },
     onError: (error: any) => {
       toast({
@@ -294,6 +289,16 @@ else if (restaurant?.mongoUri && menuItems && menuItems.length > 0) {
     setImageFile(null);
     setImagePreview(item.image);
     setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    if (!open) {
+      // Restore scroll position when closing dialog
+      setTimeout(() => {
+        window.scrollTo({ top: scrollPosition, behavior: 'auto' });
+      }, 0);
+    }
+    setIsDialogOpen(open);
   };
 
   const handleDelete = (itemId: string) => {
@@ -455,7 +460,7 @@ else if (restaurant?.mongoUri && menuItems && menuItems.length > 0) {
                 <span className="truncate">Bulk Import</span>
               </Button>
               
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
                 <DialogTrigger asChild>
                   <Button
                     onClick={resetForm}
@@ -629,7 +634,7 @@ else if (restaurant?.mongoUri && menuItems && menuItems.length > 0) {
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={() => setIsDialogOpen(false)}
+                        onClick={() => handleDialogClose(false)}
                         className="border-blue-600 text-blue-600 hover:bg-blue-50 w-full sm:w-auto"
                       >
                         Cancel
