@@ -1119,7 +1119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const image = row.Image || row.image || 'https://via.placeholder.com/300x200?text=Menu+Item';
           const isAvailable = row.IsAvailable !== false && row.IsAvailable !== 'FALSE' && row.IsAvailable !== 'false';
 
-          if (!name || !description || isNaN(price) || !category) {
+          if (!name || !description || !price || !category) {
             errors.push(`Row ${i + 2}: Missing required fields (Name, Description, Price, Category)`);
             failed++;
             continue;
